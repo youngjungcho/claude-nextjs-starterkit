@@ -25,7 +25,7 @@ export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Nav */}
-      <nav className="flex items-center justify-between border-b border-zinc-800 px-6 py-4">
+      <nav className="flex items-center justify-between border-b border-zinc-700 bg-zinc-900 px-6 py-4">
         <span className="font-bold text-zinc-50">StarterKit</span>
         <div className="flex items-center gap-4">
           <Link href="/login">

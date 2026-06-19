@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -49,7 +50,13 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4">
       <Card className="w-full max-w-md border-zinc-800 bg-zinc-900">
-        <CardHeader>
+        <CardHeader className="relative">
+          <Link
+            href="/"
+            className="absolute right-0 top-0 text-zinc-500 hover:text-zinc-200 transition-colors"
+          >
+            <X className="h-5 w-5" />
+          </Link>
           <CardTitle className="text-zinc-50">회원가입</CardTitle>
           <CardDescription className="text-zinc-400">
             계정을 만들어 시작하세요
