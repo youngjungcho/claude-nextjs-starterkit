@@ -1,6 +1,11 @@
 import { auth } from "@/lib/auth";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Activity, TrendingUp, Zap } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { StatCard } from "@/components/common/StatCard";
+import { PageHeader } from "@/components/common/PageHeader";
+import { OverviewChart } from "@/components/common/OverviewChart";
+import { DataTable } from "@/components/common/DataTable";
 
 const stats = [
   { title: "총 사용자", value: "1,234", icon: Users, change: "+12%" },
@@ -9,45 +14,89 @@ const stats = [
   { title: "API 요청", value: "98.1k", icon: Zap, change: "+18%" },
 ];
 
+const recentUsers = [
+  { 이름: "김철수", 이메일: "kim@example.com", 가입일: "2026-06-18", 상태: "활성" },
+  { 이름: "이영희", 이메일: "lee@example.com", 가입일: "2026-06-17", 상태: "활성" },
+  { 이름: "박민준", 이메일: "park@example.com", 가입일: "2026-06-15", 상태: "비활성" },
+  { 이름: "최지원", 이메일: "choi@example.com", 가입일: "2026-06-14", 상태: "활성" },
+];
+
 export default async function DashboardPage() {
   const session = await auth();
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-zinc-50">대시보드</h1>
-        <p className="mt-1 text-sm text-zinc-400">
-          안녕하세요, {session?.user?.name ?? "사용자"}님!
-        </p>
-      </div>
+      <PageHeader
+        title="대시보드"
+        description={`안녕하세요, ${session?.user?.name ?? "사용자"}님! 오늘도 좋은 하루 되세요.`}
+      />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map(({ title, value, icon: Icon, change }) => (
-          <Card key={title} className="border-zinc-800 bg-zinc-900">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-zinc-400">
-                {title}
-              </CardTitle>
-              <Icon className="h-4 w-4 text-zinc-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-zinc-50">{value}</div>
-              <p className="mt-1 text-xs text-indigo-400">{change} 지난 달 대비</p>
-            </CardContent>
-          </Card>
+        {stats.map((stat) => (
+          <StatCard key={stat.title} {...stat} changeType="positive" />
         ))}
       </div>
 
-      <Card className="border-zinc-800 bg-zinc-900">
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>방문자 개요</CardTitle>
+            <CardDescription>최근 6개월 방문자 및 신규 가입자 추이</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <OverviewChart />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>시작하기</CardTitle>
+            <CardDescription>스타터킷 설정 현황</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {[
+              "Next.js 15 App Router",
+              "NextAuth v5 인증",
+              "Prisma + SQLite DB",
+              "shadcn/ui 컴포넌트",
+              "다크/라이트 테마",
+              "Recharts 차트",
+              "Sonner 토스트",
+            ].map((item) => (
+              <div key={item} className="flex items-center gap-2 text-sm">
+                <Badge variant="secondary" className="h-5 w-5 shrink-0 rounded-full p-0 flex items-center justify-center text-[10px]">
+                  ✓
+                </Badge>
+                <span className="text-muted-foreground">{item}</span>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
         <CardHeader>
-          <CardTitle className="text-zinc-50">시작하기</CardTitle>
+          <CardTitle>최근 가입 사용자</CardTitle>
+          <CardDescription>최근 등록된 사용자 목록입니다.</CardDescription>
         </CardHeader>
-        <CardContent className="text-sm text-zinc-400 space-y-2">
-          <p>✅ Next.js 15 App Router 설정 완료</p>
-          <p>✅ NextAuth v5 인증 설정 완료</p>
-          <p>✅ Prisma + SQLite DB 설정 완료</p>
-          <p>✅ shadcn/ui 컴포넌트 설치 완료</p>
-          <p className="pt-2 text-zinc-500">이제 비즈니스 로직을 추가하세요!</p>
+        <CardContent>
+          <DataTable
+            columns={[
+              { key: "이름", header: "이름" },
+              { key: "이메일", header: "이메일" },
+              { key: "가입일", header: "가입일" },
+              {
+                key: "상태",
+                header: "상태",
+                cell: (row) => (
+                  <Badge variant={row["상태"] === "활성" ? "default" : "secondary"}>
+                    {String(row["상태"])}
+                  </Badge>
+                ),
+              },
+            ]}
+            data={recentUsers as Record<string, unknown>[]}
+          />
         </CardContent>
       </Card>
     </div>
