@@ -8,7 +8,7 @@ import { LandingNav } from "@/components/layout/LandingNav";
 const features = [
   {
     icon: Zap,
-    title: "Next.js 15 App Router",
+    title: "Next.js 16 App Router",
     description: "Server Components, Streaming, Parallel Routes로 최고 성능의 앱을 만드세요.",
   },
   {
@@ -76,7 +76,7 @@ export default function LandingPage() {
       {/* Hero */}
       <section id="hero" className="flex flex-1 flex-col items-center justify-center px-6 py-24 text-center">
         <Badge variant="secondary" className="mb-6">
-          ✨ Next.js 15 · NextAuth v5 · Prisma 7
+          ✨ Next.js 16 · NextAuth v5 · Prisma 7
         </Badge>
         <h1 className="max-w-3xl text-5xl font-bold leading-tight tracking-tight">
           더 빠르게 빌드하고,
@@ -84,7 +84,7 @@ export default function LandingPage() {
           <span className="text-primary/70">더 스마트하게 출시하세요.</span>
         </h1>
         <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-          Next.js 15, NextAuth, Prisma, shadcn/ui가 모두 설정된 스타터킷으로
+          Next.js 16, NextAuth, Prisma, shadcn/ui가 모두 설정된 스타터킷으로
           비즈니스 로직에만 집중하세요.
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-4">

@@ -55,7 +55,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {[
-              "Next.js 15 App Router",
+              "Next.js 16 App Router",
               "NextAuth v5 인증",
               "Prisma + SQLite DB",
               "shadcn/ui 컴포넌트",
