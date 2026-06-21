@@ -1,11 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 
 interface UseFetchState<T> {
   data: T | null;
   loading: boolean;
   error: Error | null;
+}
+
+type Action<T> =
+  | { type: "FETCH_START" }
+  | { type: "FETCH_SUCCESS"; payload: T }
+  | { type: "FETCH_ERROR"; payload: Error };
+
+function reducer<T>(state: UseFetchState<T>, action: Action<T>): UseFetchState<T> {
+  switch (action.type) {
+    case "FETCH_START":
+      return { data: null, loading: true, error: null };
+    case "FETCH_SUCCESS":
+      return { data: action.payload, loading: false, error: null };
+    case "FETCH_ERROR":
+      return { data: null, loading: false, error: action.payload };
+    default:
+      return state;
+  }
 }
 
 /**
@@ -15,7 +33,7 @@ interface UseFetchState<T> {
  * const { data, loading, error } = useFetch<User[]>("/api/users");
  */
 export function useFetch<T>(url: string | null): UseFetchState<T> {
-  const [state, setState] = useState<UseFetchState<T>>({
+  const [state, dispatch] = useReducer(reducer<T>, {
     data: null,
     loading: false,
     error: null,
@@ -25,17 +43,17 @@ export function useFetch<T>(url: string | null): UseFetchState<T> {
     if (!url) return;
 
     const controller = new AbortController();
-    setState({ data: null, loading: true, error: null });
+    dispatch({ type: "FETCH_START" });
 
     fetch(url, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json() as Promise<T>;
       })
-      .then((data) => setState({ data, loading: false, error: null }))
-      .catch((err) => {
+      .then((data) => dispatch({ type: "FETCH_SUCCESS", payload: data }))
+      .catch((err: Error) => {
         if (err.name === "AbortError") return;
-        setState({ data: null, loading: false, error: err });
+        dispatch({ type: "FETCH_ERROR", payload: err });
       });
 
     return () => controller.abort();
